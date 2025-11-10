@@ -79,7 +79,7 @@ android {
 
     namespace "com.reactnativetemplateapp"
     defaultConfig {
-        applicationId "com.reactnativetemplateapp"
+        applicationId "com.memoryumbrellaapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -1,4 +1,4 @@
-package com.reactnativetemplateapp
+package com.memoryumbrellaapp
 
 import android.app.Application
 import com.facebook.react.PackageList

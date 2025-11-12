@@ -11,11 +11,7 @@ class MainActivity : ReactActivity() {
    * Returns the name of the main component registered from JavaScript. This is used to schedule
    * rendering of the component.
    */
-<<<<<<< HEAD
-  override fun getMainComponentName(): String = "memory-umbrella-app"
-=======
   override fun getMainComponentName(): String = "memoryumbrellaapp"
->>>>>>> 7eb8735 (Initial commit)
 
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]

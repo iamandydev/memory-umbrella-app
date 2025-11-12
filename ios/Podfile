@@ -14,7 +14,11 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+<<<<<<< HEAD
 target 'reactNativeTemplateApp' do
+=======
+target 'memoryumbrellaapp' do
+>>>>>>> 7eb8735 (Initial commit)
   config = use_native_modules!
 
   use_react_native!(

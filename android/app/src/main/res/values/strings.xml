@@ -1,3 +1,7 @@
 <resources>
+<<<<<<< HEAD
     <string name="app_name">Memory Umbrella</string>
+=======
+    <string name="app_name">memoryumbrellaapp</string>
+>>>>>>> 7eb8735 (Initial commit)
 </resources>

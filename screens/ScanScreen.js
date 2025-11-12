@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ScanScreen = ({ navigation }) => {
   const [scanning, setScanning] = useState(true);

@@ -7,12 +7,14 @@ import {
   ScrollView,
   Alert,
   Animated,
+  Switch,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DeviceControlScreen = ({ route, navigation }) => {
+
   const { device } = route.params;
   const [ledEnabled, setLedEnabled] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
@@ -138,20 +140,12 @@ const DeviceControlScreen = ({ route, navigation }) => {
               </Text>
             </View>
 
-            <TouchableOpacity
-              style={[
-                styles.switchContainer,
-                ledEnabled ? styles.switchOn : styles.switchOff,
-              ]}
-              onPress={handleLedToggle}
-            >
-              <View
-                style={[
-                  styles.switchThumb,
-                  ledEnabled && styles.switchThumbOn,
-                ]}
-              />
-            </TouchableOpacity>
+            <Switch
+              value={ledEnabled}
+              onValueChange={handleLedToggle}
+              trackColor={{ false: "#d1d5db", true: "#2563eb" }}
+              thumbColor="#fff"
+            />
           </View>
         </View>
 

@@ -5,12 +5,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
   Alert,
   Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const DeviceControlScreen = ({ route, navigation }) => {
   const { device } = route.params;
@@ -181,5 +181,79 @@ const DeviceControlScreen = ({ route, navigation }) => {
     </SafeAreaView>
   );
 };
-
+// 🎨 Estilos
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: "#f0f6ff" },
+  header: {
+    backgroundColor: "#2563eb",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    elevation: 4,
+  },
+  backButton: { marginRight: 12, padding: 6 },
+  headerTitle: { color: "#fff", fontSize: 18, fontWeight: "bold" },
+  content: { padding: 16 },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    elevation: 2,
+  },
+  row: { flexDirection: "row", alignItems: "center", marginBottom: 8 },
+  iconCircleBlue: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: "#dbeafe",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  iconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  deviceName: { fontSize: 16, color: "#111827", fontWeight: "bold" },
+  deviceId: { fontSize: 13, color: "#6b7280" },
+  statusDot: { width: 10, height: 10, borderRadius: 5 },
+  statusRow: { flexDirection: "row", alignItems: "center", gap: 6 },
+  statusText: { color: "#6b7280", marginLeft: 6 },
+  cardTitle: { fontSize: 16, fontWeight: "bold", color: "#111827" },
+  cardSubtitle: { color: "#6b7280", fontSize: 13 },
+  ledStateBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 12,
+    justifyContent: "center",
+  },
+  ledStateLabel: { color: "#4b5563", fontSize: 13, marginRight: 6 },
+  ledStateIndicator: {
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  actionButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f9fafb",
+    borderRadius: 10,
+    padding: 12,
+  },
+  actionText: { marginLeft: 10, fontSize: 14, color: "#2563eb" },
+  noteBox: {
+    backgroundColor: "#eff6ff",
+    borderColor: "#bfdbfe",
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 12,
+  },
+  noteText: { color: "#1e3a8a", fontSize: 13 },
+});
 export default DeviceControlScreen;

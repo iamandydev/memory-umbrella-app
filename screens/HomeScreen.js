@@ -5,13 +5,13 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
   Linking,
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import BluetoothSerial from 'react-native-bluetooth-classic';
+import RNBluetoothClassic from 'react-native-bluetooth-classic';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const HomeScreen = ({ navigation }) => {
   // ✅ Función principal que valida permisos y servicios
@@ -36,7 +36,8 @@ const HomeScreen = ({ navigation }) => {
       }
 
       // --- 2️⃣ Verificar servicios Bluetooth ---
-      const isBluetoothEnabled = await BluetoothSerial.isEnabled();
+      //const isBluetoothEnabled = await BluetoothSerial.isEnabled();
+      const isBluetoothEnabled = await RNBluetoothClassic.isBluetoothEnabled();
 
       if (!isBluetoothEnabled) {
         Alert.alert(

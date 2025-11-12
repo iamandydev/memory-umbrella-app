@@ -1,200 +1,185 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
-  Alert,
-  FlatList,
+  Image,
+  StyleSheet,
   TouchableOpacity,
+  SafeAreaView,
+  Alert,
+  Linking,
   PermissionsAndroid,
   Platform,
-  StyleSheet,
-  Linking,
 } from 'react-native';
-import RNBluetoothClassic from 'react-native-bluetooth-classic';
+import BluetoothSerial from 'react-native-bluetooth-classic';
 
 const HomeScreen = ({ navigation }) => {
-  const [devices, setDevices] = useState([]);
-  const [scanning, setScanning] = useState(false);
-  const [message, setMessage] = useState('');
-
-  // -----------------------------
-  // 🔹 Solicitud de permisos
-  // -----------------------------
-  const requestPermissions = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const granted = await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-          PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        ]);
-
-        const allGranted = Object.values(granted).every(
-          (v) => v === PermissionsAndroid.RESULTS.GRANTED,
-        );
-
-        if (!allGranted) {
-          Alert.alert(
-            'Permisos requeridos',
-            'Por favor concede permisos de Bluetooth y Ubicación.',
-            [{ text: 'Abrir configuración', onPress: () => Linking.openSettings() }],
-          );
-          return false;
-        }
-        return true;
-      } catch (err) {
-        console.error('❌ Error solicitando permisos:', err);
-        return false;
-      }
-    }
-    return true;
-  };
-
-  // -----------------------------
-  // 🔹 Escanear dispositivos emparejados
-  // -----------------------------
+  // ✅ Función principal que valida permisos y servicios
   const handleScanPress = async () => {
-    setDevices([]);
-    setMessage('');
-    setScanning(true);
-
-    const hasPerms = await requestPermissions();
-    if (!hasPerms) return;
-
     try {
-      const enabled = await RNBluetoothClassic.isBluetoothEnabled();
-      if (!enabled) {
-        Alert.alert('Bluetooth apagado', 'Por favor activa el Bluetooth.');
-        setScanning(false);
+      // --- 1️⃣ Verificar permisos ---
+      const hasPermissions = await requestBluetoothPermissions();
+
+      if (!hasPermissions) {
+        Alert.alert(
+          'Permisos',
+          'Por favor otorga permisos de ubicación y Bluetooth.',
+          [
+            {
+              text: 'Ir a configuraciones',
+              onPress: () => Linking.openSettings(),
+            },
+            { text: 'Cancelar', style: 'cancel' },
+          ]
+        );
         return;
       }
 
-      console.log('✅ Bluetooth habilitado');
-      setMessage('🔍 Buscando dispositivos emparejados...');
+      // --- 2️⃣ Verificar servicios Bluetooth ---
+      const isBluetoothEnabled = await BluetoothSerial.isEnabled();
 
-      const bondedDevices = await RNBluetoothClassic.getBondedDevices();
-      console.log('📡 Dispositivos emparejados:', bondedDevices);
-
-      if (bondedDevices.length === 0) {
-        setMessage('No se encontraron dispositivos emparejados.');
-      } else {
-        setDevices(bondedDevices);
-        setMessage(`🔗 ${bondedDevices.length} dispositivo(s) emparejado(s) encontrado(s).`);
+      if (!isBluetoothEnabled) {
+        Alert.alert(
+          'Servicios',
+          'Por favor activa los servicios de Bluetooth y Ubicación.'
+        );
+        return;
       }
-    } catch (err) {
-      console.error('❌ Error durante el escaneo:', err);
-      setMessage('Error escaneando dispositivos.');
-    }
 
-    setScanning(false);
-  };
+      // --- 3️⃣ Si todo está correcto, navegar a ScanScreen ---
+      navigation.navigate('Scan');
 
-  // -----------------------------
-  // 🔹 Intentar conexión a un dispositivo
-  // -----------------------------
-  const handleConnect = async (device) => {
-    try {
-      console.log('🔌 Intentando conectar con:', device.name);
-      const connected = await RNBluetoothClassic.connectToDevice(device.address);
-      if (connected) {
-        Alert.alert('Conectado', `Conectado a ${device.name}`);
-        navigation.navigate('Device', { device });
-      } else {
-        Alert.alert('Error', `No se pudo conectar a ${device.name}`);
-      }
-    } catch (err) {
-      console.error('❌ Error de conexión:', err);
-      Alert.alert('Error', 'No se pudo conectar al dispositivo.');
+    } catch (error) {
+      console.error('Error al validar permisos:', error);
+      Alert.alert('Error', 'Ocurrió un error al validar los permisos.');
     }
   };
 
-  // -----------------------------
-  // 🔹 Renderizado de dispositivos
-  // -----------------------------
-  const renderItem = ({ item }) => (
-    <View style={styles.deviceContainer}>
-      <Text style={styles.deviceText}>
-        {item.name || 'Sin nombre'} ({item.address})
-      </Text>
-      <TouchableOpacity
-        style={styles.connectButton}
-        onPress={() => handleConnect(item)}
-      >
-        <Text style={styles.connectText}>Conectar</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  // ✅ Función para solicitar permisos Bluetooth + Ubicación
+  const requestBluetoothPermissions = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const btScan = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN
+        );
+        const btConnect = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT
+        );
+        const location = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+        );
 
-  // -----------------------------
-  // 🔹 Renderizado general
-  // -----------------------------
+        return (
+          btScan === PermissionsAndroid.RESULTS.GRANTED &&
+          btConnect === PermissionsAndroid.RESULTS.GRANTED &&
+          location === PermissionsAndroid.RESULTS.GRANTED
+        );
+      } catch (err) {
+        console.error('Error solicitando permisos:', err);
+        return false;
+      }
+    }
+    return true; // iOS maneja permisos de otra forma
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Bluetooth Clásico</Text>
-
-      <TouchableOpacity
-        style={[styles.scanButton, scanning && { backgroundColor: '#aaa' }]}
-        onPress={handleScanPress}
-        disabled={scanning}
-      >
-        <Text style={styles.scanButtonText}>
-          {scanning ? 'Buscando...' : 'Buscar dispositivos'}
-        </Text>
-      </TouchableOpacity>
-
-      <View style={styles.resultBox}>
-        {devices.length > 0 ? (
-          <FlatList
-            data={devices}
-            keyExtractor={(item) => item.address}
-            renderItem={renderItem}
+    <SafeAreaView style={styles.container}>
+      {/* Contenedor principal */}
+      <View style={styles.innerContainer}>
+        {/* Logo */}
+        <View style={styles.logoContainer}>
+          <Image
+            source={{
+              uri: 'https://images.unsplash.com/photo-1701500096456-28186c4a306d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibHVldG9vdGglMjBsb2dvJTIwaWNvbnxlbnwxfHx8fDE3NjE4NzU1ODh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+            }}
+            style={styles.logo}
+            resizeMode="cover"
           />
-        ) : (
-          <Text style={styles.messageText}>{message}</Text>
-        )}
+        </View>
+
+        {/* Título */}
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Control ESP32</Text>
+          <Text style={styles.subtitle}>Controla tus dispositivos vía Bluetooth</Text>
+        </View>
+
+        {/* Botón Escanear */}
+        <TouchableOpacity
+          style={styles.button}
+          activeOpacity={0.8}
+          onPress={handleScanPress}
+        >
+          <Text style={styles.buttonText}>Escanear Dispositivos</Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
-// -----------------------------
-// 🔹 Estilos
-// -----------------------------
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', padding: 20, paddingTop: 50 },
-  title: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 20 },
-  scanButton: {
-    backgroundColor: '#28a745',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 10,
-    alignSelf: 'center',
-  },
-  scanButtonText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  resultBox: {
-    marginTop: 30,
-    backgroundColor: '#f2f2f2',
-    borderRadius: 10,
-    padding: 10,
-    flex: 1,
-  },
-  deviceContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomColor: '#ddd',
-    borderBottomWidth: 1,
-    paddingVertical: 8,
-  },
-  deviceText: { flex: 1, color: '#333' },
-  connectButton: {
-    backgroundColor: '#007bff',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-  },
-  connectText: { color: '#fff', fontWeight: 'bold' },
-  messageText: { textAlign: 'center', color: '#666', marginTop: 20 },
-});
-
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f0f6ff', // fondo degradado aproximado (azul claro a blanco)
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  innerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    maxWidth: 360,
+    paddingHorizontal: 24,
+    gap: 48,
+  },
+  logoContainer: {
+    width: 192,
+    height: 192,
+    borderRadius: 96,
+    overflow: 'hidden',
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+  },
+  logo: {
+    width: '100%',
+    height: '100%',
+  },
+  titleContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#2563eb',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#4b5563',
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  button: {
+    width: '100%',
+    maxWidth: 280,
+    backgroundColor: '#2563eb',
+    paddingVertical: 16,
+    borderRadius: 16,
+    shadowColor: '#2563eb',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+    marginTop: 24,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+});

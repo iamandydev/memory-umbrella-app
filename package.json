@@ -1,11 +1,6 @@
 {
-<<<<<<< HEAD
-  "name": "memory-umbrella-app",
-  "version": "0.0.16",
-=======
   "name": "memoryumbrellaapp",
-  "version": "0.0.1",
->>>>>>> 7eb8735 (Initial commit)
+  "version": "0.0.16",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -15,21 +10,15 @@
     "test": "jest"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@react-native/new-app-screen": "0.82.1",
     "@react-navigation/native": "^7.1.19",
     "@react-navigation/native-stack": "^7.6.2",
     "react": "19.1.1",
     "react-native": "0.82.1",
     "react-native-bluetooth-classic": "^1.73.0-rc.16",
+    "react-native-permissions": "^5.4.4",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.18.0"
-=======
-    "react": "19.1.1",
-    "react-native": "0.82.1",
-    "@react-native/new-app-screen": "0.82.1",
-    "react-native-safe-area-context": "^5.5.2"
->>>>>>> 7eb8735 (Initial commit)
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -54,8 +43,4 @@
   "engines": {
     "node": ">=20"
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 7eb8735 (Initial commit)

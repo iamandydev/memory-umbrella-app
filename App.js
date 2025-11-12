@@ -1,24 +1,35 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+// Importar tus screens
 import HomeScreen from './screens/HomeScreen';
-import DeviceScreen from './screens/DeviceScreen';
+import ScanScreen from './screens/ScanScreen';
+import DeviceControlScreen from './screens/DeviceControlScreen';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerShown: false, // ocultamos el header nativo para usar el de tus pantallas personalizadas
+          animation: 'slide_from_right',
+        }}
+      >
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: 'Buscador BLE' }}
         />
         <Stack.Screen
-          name="Device"
-          component={DeviceScreen}
-          options={{ title: 'Dispositivo conectado' }}
+          name="Scan"
+          component={ScanScreen}
+        />
+        <Stack.Screen
+          name="DeviceControl"
+          component={DeviceControlScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

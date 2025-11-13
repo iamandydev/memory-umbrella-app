@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
+=======
+// src/screens/DeviceControlScreen.js
+import React, { useState } from "react";
+>>>>>>> 3851e77 (first commit version 0.0.18)
 import {
   View,
   Text,
   TouchableOpacity,
+<<<<<<< HEAD
   StyleSheet,
   ScrollView,
   Alert,
@@ -87,11 +93,60 @@ const DeviceControlScreen = ({ route, navigation }) => {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={disconnectDevice}>
+=======
+  Switch,
+  Alert,
+  Vibration,
+  StyleSheet,
+} from "react-native";
+import Icon from "react-native-vector-icons/Feather";
+
+export default function DeviceControlScreen({ route, navigation }) {
+  const { device } = route.params || {}; // ✅ Recibir el dispositivo desde la navegación
+  const [ledEnabled, setLedEnabled] = useState(false);
+  const [isConnected, setIsConnected] = useState(true);
+
+  const handleLedToggle = (value) => {
+    setLedEnabled(value);
+    Vibration.vibrate(50);
+    Alert.alert(
+      value ? "LED encendido" : "LED apagado",
+      "Comando enviado al dispositivo ESP32"
+    );
+  };
+
+  const playNotificationSound = async () => {
+    try {
+      Vibration.vibrate([100, 200, 100]);
+    } catch (error) {
+      console.log("Error al reproducir sonido:", error);
+    }
+  };
+
+  const handleDisconnect = () => {
+    setIsConnected(false);
+    playNotificationSound();
+    Alert.alert(
+      "Dispositivo desconectado",
+      "La conexión con el ESP32 se ha perdido"
+    );
+    setTimeout(() => {
+      navigation.goBack(); // ✅ Regresa automáticamente a la pantalla anterior
+    }, 2000);
+  };
+
+  return (
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+>>>>>>> 3851e77 (first commit version 0.0.18)
           <Icon name="chevron-left" size={26} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Control del Dispositivo</Text>
       </View>
 
+<<<<<<< HEAD
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Info Dispositivo */}
         <View style={styles.card}>
@@ -102,22 +157,44 @@ const DeviceControlScreen = ({ route, navigation }) => {
             <View style={{ flex: 1 }}>
               <Text style={styles.deviceName}>{device?.name || 'ESP32'}</Text>
               <Text style={styles.deviceId}>ID: {device?.id || 'N/A'}</Text>
+=======
+      {/* Contenido */}
+      <View style={styles.content}>
+        {/* Device Info */}
+        <View style={styles.card}>
+          <View style={styles.row}>
+            <View style={styles.iconCircleBlue}>
+              <Icon name="bluetooth" size={28} color="#2563eb" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.deviceName}>{device?.name || "ESP32"}</Text>
+              <Text style={styles.deviceId}>ID: {device?.id || "0000"}</Text>
+>>>>>>> 3851e77 (first commit version 0.0.18)
             </View>
             <View
               style={[
                 styles.statusDot,
+<<<<<<< HEAD
                 { backgroundColor: isConnected ? '#22c55e' : '#ef4444' },
+=======
+                { backgroundColor: isConnected ? "#22c55e" : "#ef4444" },
+>>>>>>> 3851e77 (first commit version 0.0.18)
               ]}
             />
           </View>
           <View style={styles.statusRow}>
             <Icon name="power" size={16} color="#6b7280" />
             <Text style={styles.statusText}>
+<<<<<<< HEAD
               {isConnected ? 'Conectado' : 'Desconectado'}
+=======
+              {isConnected ? "Conectado" : "Desconectado"}
+>>>>>>> 3851e77 (first commit version 0.0.18)
             </Text>
           </View>
         </View>
 
+<<<<<<< HEAD
         {/* Control LED */}
         <View style={styles.card}>
           <View style={styles.ledRow}>
@@ -125,11 +202,21 @@ const DeviceControlScreen = ({ route, navigation }) => {
               style={[
                 styles.ledIconContainer,
                 { backgroundColor: ledEnabled ? '#fef9c3' : '#f3f4f6' },
+=======
+        {/* LED Control */}
+        <View style={styles.card}>
+          <View style={styles.row}>
+            <View
+              style={[
+                styles.iconCircle,
+                { backgroundColor: ledEnabled ? "#fef9c3" : "#f3f4f6" },
+>>>>>>> 3851e77 (first commit version 0.0.18)
               ]}
             >
               <Icon
                 name="sun"
                 size={24}
+<<<<<<< HEAD
                 color={ledEnabled ? '#eab308' : '#9ca3af'}
               />
             </View>
@@ -140,6 +227,17 @@ const DeviceControlScreen = ({ route, navigation }) => {
               </Text>
             </View>
 
+=======
+                color={ledEnabled ? "#eab308" : "#9ca3af"}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardTitle}>Control LED</Text>
+              <Text style={styles.cardSubtitle}>
+                {ledEnabled ? "LED encendido" : "LED apagado"}
+              </Text>
+            </View>
+>>>>>>> 3851e77 (first commit version 0.0.18)
             <Switch
               value={ledEnabled}
               onValueChange={handleLedToggle}
@@ -147,10 +245,36 @@ const DeviceControlScreen = ({ route, navigation }) => {
               thumbColor="#fff"
             />
           </View>
+<<<<<<< HEAD
+=======
+
+          {/* Estado visual */}
+          <View style={styles.ledStateBox}>
+            <Text style={styles.ledStateLabel}>Estado:</Text>
+            <View
+              style={[
+                styles.ledStateIndicator,
+                {
+                  backgroundColor: ledEnabled ? "#dcfce7" : "#e5e7eb",
+                },
+              ]}
+            >
+              <Text
+                style={{
+                  color: ledEnabled ? "#15803d" : "#4b5563",
+                  fontWeight: "bold",
+                }}
+              >
+                {ledEnabled ? "ON" : "OFF"}
+              </Text>
+            </View>
+          </View>
+>>>>>>> 3851e77 (first commit version 0.0.18)
         </View>
 
         {/* Acciones */}
         <View style={styles.card}>
+<<<<<<< HEAD
           <Text style={styles.sectionTitle}>Acciones</Text>
           <TouchableOpacity style={styles.actionButton} onPress={handleViewStatus}>
             <Text style={styles.actionButtonText}>Ver Estado del Dispositivo</Text>
@@ -160,10 +284,36 @@ const DeviceControlScreen = ({ route, navigation }) => {
             onPress={disconnectDevice}
           >
             <Text style={[styles.actionButtonText, styles.disconnectText]}>
+=======
+          <Text style={styles.cardTitle}>Acciones</Text>
+
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() =>
+              Alert.alert(
+                "Estado del dispositivo",
+                `LED: ${ledEnabled ? "Encendido" : "Apagado"}\nConexión: ${
+                  isConnected ? "Activa" : "Inactiva"
+                }`
+              )
+            }
+          >
+            <Icon name="info" size={18} color="#2563eb" />
+            <Text style={styles.actionText}>Ver Estado del Dispositivo</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.actionButton, { marginTop: 10 }]}
+            onPress={handleDisconnect}
+          >
+            <Icon name="x-circle" size={18} color="#dc2626" />
+            <Text style={[styles.actionText, { color: "#dc2626" }]}>
+>>>>>>> 3851e77 (first commit version 0.0.18)
               Desconectar Dispositivo
             </Text>
           </TouchableOpacity>
         </View>
+<<<<<<< HEAD
       </ScrollView>
 
       {/* Banner de error */}
@@ -175,6 +325,24 @@ const DeviceControlScreen = ({ route, navigation }) => {
     </SafeAreaView>
   );
 };
+=======
+
+        {/* Nota */}
+        <View style={styles.noteBox}>
+          <Text style={styles.noteText}>
+            💡 <Text style={{ fontWeight: "bold" }}>Nota:</Text> Esta aplicación
+            simula el control Bluetooth de un ESP32. En una implementación real,
+            se deben usar librerías nativas como{" "}
+            <Text style={{ fontStyle: "italic" }}>react-native-ble-plx</Text> o{" "}
+            <Text style={{ fontStyle: "italic" }}>react-native-bluetooth-classic</Text>.
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+>>>>>>> 3851e77 (first commit version 0.0.18)
 // 🎨 Estilos
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f0f6ff" },
@@ -250,4 +418,7 @@ const styles = StyleSheet.create({
   },
   noteText: { color: "#1e3a8a", fontSize: 13 },
 });
+<<<<<<< HEAD
 export default DeviceControlScreen;
+=======
+>>>>>>> 3851e77 (first commit version 0.0.18)

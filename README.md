@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Memory Umbrella App ☂️
 
 Aplicación móvil en React Native para conectar y controlar una sombrilla inteligente mediante Bluetooth (ESP32-CAM).
@@ -9,12 +8,11 @@ Aplicación móvil en React Native para conectar y controlar una sombrilla intel
 📱 Compatible con Android
 
 ## Versión
-**0.0.16**
+**0.0.20**
 
 ## Repositorios relacionados
 - Firmware ESP32: [memory-umbrella-esp32](https://github.com/iamandydev/memory-umbrella-esp32)
 - Diseño UI/UX (Figma): [Umbrellaapp](https://github.com/iamandydev/Umbrellaapp)
-=======
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
@@ -112,4 +110,3 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
->>>>>>> 7eb8735 (Initial commit)

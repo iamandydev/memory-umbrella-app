@@ -2,7 +2,6 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-// Importar tus screens
 import HomeScreen from './screens/HomeScreen';
 import ScanScreen from './screens/ScanScreen';
 import DeviceControlScreen from './screens/DeviceControlScreen';

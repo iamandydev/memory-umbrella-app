@@ -100,8 +100,8 @@ const HomeScreen = ({ navigation }) => {
 
         {/* Título */}
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Control ESP32</Text>
-          <Text style={styles.subtitle}>Controla tus dispositivos vía Bluetooth</Text>
+          <Text style={styles.title}>Memory Umbrella</Text>
+          <Text style={styles.subtitle}>Toma el control y aprovecha al maximo tu memory umbrella one</Text>
         </View>
 
         {/* Botón Escanear */}

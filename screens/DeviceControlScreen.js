@@ -12,7 +12,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 /*import Icon from 'react-native-vector-icons';*/
-import Icon from 'react-native-vector-icons/material-icons';
+/* import Icon from 'react-native-vector-icons/material-icons'; */
+import { Icon } from "@react-native-vector-icons/material-icons";
 
 const DeviceControlScreen = ({ route, navigation }) => {
 

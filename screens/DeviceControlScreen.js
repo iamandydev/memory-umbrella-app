@@ -9,10 +9,10 @@ import {
   Animated,
   Switch,
 } from 'react-native';
-/* import Icon from 'react-native-vector-icons/Feather'; */
-import { Icon } from '@react-native-vector-icons/material-icons';
-import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import RNBluetoothClassic from 'react-native-bluetooth-classic';
+/*import Icon from 'react-native-vector-icons';*/
+import Icon from 'react-native-vector-icons/material-icons';
 
 const DeviceControlScreen = ({ route, navigation }) => {
 
@@ -98,7 +98,7 @@ const DeviceControlScreen = ({ route, navigation }) => {
         <View style={styles.card}>
           <View style={styles.deviceInfoRow}>
             <View style={styles.deviceIconContainer}>
-              <Icon name="bluetooth" size={32} color="#2563eb" />
+              <Icon name="bluetooth" size={20} color="#2563eb" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.deviceName}>{device?.name || 'ESP32'}</Text>

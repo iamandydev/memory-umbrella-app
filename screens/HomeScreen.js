@@ -93,7 +93,7 @@ const HomeScreen = ({ navigation }) => {
             /* source={{
               uri: 'https://images.unsplash.com/photo-1701500096456-28186c4a306d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibHVldG9vdGglMjBsb2dvJTIwaWNvbnxlbnwxfHx8fDE3NjE4NzU1ODh8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
             }} */
-           source={require('../assets/mu-icon.png')}
+           source={require('../assets/marca/mu-icon.png')}
             style={styles.logo}
             resizeMode="cover"
           />

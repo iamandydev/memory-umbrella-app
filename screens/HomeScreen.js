@@ -123,7 +123,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f6ff', // fondo degradado aproximado (azul claro a blanco)
+    backgroundColor: '#0D1B2A',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -138,13 +138,9 @@ const styles = StyleSheet.create({
   logoContainer: {
     width: 192,
     height: 192,
-    borderRadius: 96,
     overflow: 'hidden',
     elevation: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 5 },
+    shadowColor: 'transparent',
   },
   logo: {
     width: '100%',

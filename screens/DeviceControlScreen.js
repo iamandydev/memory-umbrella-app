@@ -9,7 +9,8 @@ import {
   Animated,
   Switch,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+/* import Icon from 'react-native-vector-icons/Feather'; */
+import { Icon } from '@react-native-vector-icons/material-icons';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

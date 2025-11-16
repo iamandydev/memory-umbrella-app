@@ -9,11 +9,10 @@ import {
   Animated,
   Switch,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
-/*import Icon from 'react-native-vector-icons';*/
-/* import Icon from 'react-native-vector-icons/material-icons'; */
-import { Icon } from "@react-native-vector-icons/material-icons";
+
 
 const DeviceControlScreen = ({ route, navigation }) => {
 
@@ -189,7 +188,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   backButton: { marginRight: 12, padding: 6 },
-  headerTitle: { color: "#fff", fontSize: 18, fontWeight: "bold" },
+  headerTitle: { color: "#fff", fontSize: 18, fontWeight: "small" },
   content: { padding: 16 },
   card: {
     backgroundColor: "#fff",

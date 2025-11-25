@@ -13,11 +13,12 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RNBluetoothClassic from 'react-native-bluetooth-classic';
 
-
 const DeviceControlScreen = ({ route, navigation }) => {
-
   const { device } = route.params;
-  const [ledEnabled, setLedEnabled] = useState(false);
+
+  const [lightEnabled, setLightEnabled] = useState(false);
+  const [blinkEnabled, setBlinkEnabled] = useState(false);
+
   const [isConnected, setIsConnected] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const fadeAnim = new Animated.Value(0);
@@ -60,26 +61,50 @@ const DeviceControlScreen = ({ route, navigation }) => {
     }
   };
 
-  const handleLedToggle = async () => {
-    const newValue = !ledEnabled;
-    setLedEnabled(newValue);
-
+  // 🔵 Función genérica para enviar comandos al ESP32
+  const sendCommand = async (cmd) => {
     try {
-      if (!isConnected) throw new Error('El dispositivo no está conectado');
-      const command = newValue ? '1' : '0';
-      await RNBluetoothClassic.writeToDevice(device.id, command);
+      if (!isConnected) throw new Error("El dispositivo no está conectado");
+      await RNBluetoothClassic.writeToDevice(device.id, cmd + "\n");
     } catch (error) {
-      showError('Error al enviar comando: ' + error.message);
-      setLedEnabled(!newValue); // revertir cambio
+      showError("Error al enviar comando: " + error.message);
+    }
+  };
+
+  // 🌕 LIGHT
+  const handleLightToggle = async () => {
+    const newValue = !lightEnabled;
+    setLightEnabled(newValue);
+
+    if (newValue) {
+      setBlinkEnabled(false); // apagar BLINK
+      await sendCommand("ligth"); // así está escrito en tu ESP32
+    } else {
+      await sendCommand("off");
+    }
+  };
+
+  // ⚡ BLINK
+  const handleBlinkToggle = async () => {
+    const newValue = !blinkEnabled;
+    setBlinkEnabled(newValue);
+
+    if (newValue) {
+      setLightEnabled(false); // apagar LIGHT
+      await sendCommand("blink");
+    } else {
+      await sendCommand("off");
     }
   };
 
   const handleViewStatus = () => {
     Alert.alert(
       'Estado del dispositivo',
-      `LED: ${ledEnabled ? 'Encendido' : 'Apagado'}\nConexión: ${
-        isConnected ? 'Activa' : 'Inactiva'
-      }`
+      `Modo actual:\n${
+        lightEnabled ? "LIGHT"
+        : blinkEnabled ? "BLINK"
+        : "OFF"
+      }\nConexión: ${isConnected ? 'Activa' : 'Inactiva'}`
     );
   };
 
@@ -119,31 +144,57 @@ const DeviceControlScreen = ({ route, navigation }) => {
           </View>
         </View>
 
-        {/* Control LED */}
+        {/* 🔥 Nuevo Control de Modos */}
         <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Modos de Iluminación</Text>
+
+          {/* LIGHT */}
           <View style={styles.ledRow}>
             <View
               style={[
                 styles.ledIconContainer,
-                { backgroundColor: ledEnabled ? '#fef9c3' : '#f3f4f6' },
+                { backgroundColor: lightEnabled ? "#fef9c3" : "#f3f4f6" },
               ]}
             >
-              <Icon
-                name="sun"
-                size={24}
-                color={ledEnabled ? '#eab308' : '#9ca3af'}
-              />
+              <Icon name="wb-sunny" size={24} color={lightEnabled ? "#eab308" : "#9ca3af"} />
             </View>
+
             <View style={{ flex: 1 }}>
-              <Text style={styles.ledTitle}>Control LED</Text>
+              <Text style={styles.ledTitle}>Modo Luz (LIGHT)</Text>
               <Text style={styles.ledSubtitle}>
-                {ledEnabled ? 'LED encendido' : 'LED apagado'}
+                {lightEnabled ? "Encendido" : "Apagado"}
               </Text>
             </View>
 
             <Switch
-              value={ledEnabled}
-              onValueChange={handleLedToggle}
+              value={lightEnabled}
+              onValueChange={handleLightToggle}
+              trackColor={{ false: "#d1d5db", true: "#2563eb" }}
+              thumbColor="#fff"
+            />
+          </View>
+
+          {/* BLINK */}
+          <View style={[styles.ledRow, { marginTop: 14 }]}>
+            <View
+              style={[
+                styles.ledIconContainer,
+                { backgroundColor: blinkEnabled ? "#ffe4e6" : "#f3f4f6" },
+              ]}
+            >
+              <Icon name="flash-on" size={24} color={blinkEnabled ? "#f43f5e" : "#9ca3af"} />
+            </View>
+
+            <View style={{ flex: 1 }}>
+              <Text style={styles.ledTitle}>Modo Parpadeo (BLINK)</Text>
+              <Text style={styles.ledSubtitle}>
+                {blinkEnabled ? "Activado" : "Desactivado"}
+              </Text>
+            </View>
+
+            <Switch
+              value={blinkEnabled}
+              onValueChange={handleBlinkToggle}
               trackColor={{ false: "#d1d5db", true: "#2563eb" }}
               thumbColor="#fff"
             />
@@ -176,7 +227,8 @@ const DeviceControlScreen = ({ route, navigation }) => {
     </SafeAreaView>
   );
 };
-// 🎨 Estilos
+
+/* 🎨 Estilos */
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f0f6ff" },
   header: {
@@ -188,8 +240,10 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   backButton: { marginRight: 12, padding: 6 },
-  headerTitle: { color: "#fff", fontSize: 18, fontWeight: "small" },
-  content: { padding: 16 },
+  headerTitle: { color: "#fff", fontSize: 18, fontWeight: "600" },
+
+  scrollContainer: { padding: 16 },
+
   card: {
     backgroundColor: "#fff",
     borderRadius: 16,
@@ -197,17 +251,30 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     elevation: 2,
   },
-  row: { flexDirection: "row", alignItems: "center", marginBottom: 8 },
-  iconCircleBlue: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+
+  deviceInfoRow: { flexDirection: "row", alignItems: "center", marginBottom: 8 },
+  deviceIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: "#dbeafe",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
   },
-  iconCircle: {
+
+  deviceName: { fontSize: 16, color: "#111827", fontWeight: "bold" },
+  deviceId: { fontSize: 13, color: "#6b7280" },
+
+  statusDot: { width: 10, height: 10, borderRadius: 5 },
+  statusRow: { flexDirection: "row", alignItems: "center", gap: 6 },
+  statusText: { color: "#6b7280", marginLeft: 6 },
+
+  sectionTitle: { fontSize: 16, fontWeight: "bold", color: "#111827", marginBottom: 12 },
+
+  ledRow: { flexDirection: "row", alignItems: "center" },
+
+  ledIconContainer: {
     width: 48,
     height: 48,
     borderRadius: 24,
@@ -215,40 +282,32 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginRight: 12,
   },
-  deviceName: { fontSize: 16, color: "#111827", fontWeight: "bold" },
-  deviceId: { fontSize: 13, color: "#6b7280" },
-  statusDot: { width: 10, height: 10, borderRadius: 5 },
-  statusRow: { flexDirection: "row", alignItems: "center", gap: 6 },
-  statusText: { color: "#6b7280", marginLeft: 6 },
-  cardTitle: { fontSize: 16, fontWeight: "bold", color: "#111827" },
-  cardSubtitle: { color: "#6b7280", fontSize: 13 },
-  ledStateBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 12,
-    justifyContent: "center",
-  },
-  ledStateLabel: { color: "#4b5563", fontSize: 13, marginRight: 6 },
-  ledStateIndicator: {
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    borderRadius: 16,
-  },
+
+  ledTitle: { fontSize: 15, color: "#111827", fontWeight: "600" },
+  ledSubtitle: { color: "#6b7280", fontSize: 13 },
+
   actionButton: {
-    flexDirection: "row",
-    alignItems: "center",
     backgroundColor: "#f9fafb",
     borderRadius: 10,
     padding: 12,
+    marginTop: 8,
   },
-  actionText: { marginLeft: 10, fontSize: 14, color: "#2563eb" },
-  noteBox: {
-    backgroundColor: "#eff6ff",
-    borderColor: "#bfdbfe",
-    borderWidth: 1,
-    borderRadius: 10,
+  actionButtonText: { fontSize: 14, color: "#2563eb" },
+
+  disconnectButton: { backgroundColor: "#fee2e2" },
+  disconnectText: { color: "#b91c1c" },
+
+  errorBanner: {
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: "#ef4444",
     padding: 12,
+    borderRadius: 8,
+    elevation: 4,
   },
-  noteText: { color: "#1e3a8a", fontSize: 13 },
+  errorText: { color: "#fff", textAlign: "center", fontWeight: "600" },
 });
+
 export default DeviceControlScreen;
